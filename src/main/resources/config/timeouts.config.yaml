@@ -1,0 +1,11 @@
+# file for configuring timeouts
+
+#Orbitary settings:
+# implicitlyWait
+# pageLoadTimeout
+# scriptTimeout
+# scrollTimes
+scrollTimes: 9
+implicitlyWait: 10
+pageLoadTimeout: 50
+scriptTimeout: 5

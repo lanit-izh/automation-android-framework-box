@@ -1,0 +1,6 @@
+capabilities:
+  platformName: Android
+  platformVersion: "11.0"
+  deviceName: Nexus
+  appPackage: com.google.android.youtube
+  appActivity: .HomeActivity
