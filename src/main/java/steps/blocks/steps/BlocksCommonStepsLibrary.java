@@ -2,7 +2,6 @@ package steps.blocks.steps;
 
 
 import application.utils.ExistsAppiumMatcher;
-import application.utils.MatcherManager;
 import cucumber.api.java.ru.И;
 import ru.yandex.qatools.matchers.webdriver.DisplayedMatcher;
 import ru.yandex.qatools.matchers.webdriver.ExistsMatcher;
