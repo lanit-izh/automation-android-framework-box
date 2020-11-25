@@ -76,8 +76,36 @@ public final class BlocksCommonStepsLibrary extends BaseSteps {
 
     @И("проверить что блок существует")
     public void checkBlockExist() {
+
+        for (int i = 0; i < getNumberOfScrolls(); i++) {
+            try {
+                getCurrentBlock().should(ExistsAppiumMatcher.exists(), 1);
+                break;
+            } catch (AssertionError ignored) {
+                scroll(true);
+            }
+        }
         getCurrentBlock().should(ExistsAppiumMatcher.exists(), 10);
     }
+
+    @И("выровнять текущий блок по центру")
+    public void moveBlockToCenter() {
+        int curBlockLoc = getCurrentBlock().getLocation().y;
+        final int windowCenter = getDriver().manage().window().getSize().height / 2;
+        if (curBlockLoc > windowCenter) {
+            scroll(true);
+            for (int i = 0; curBlockLoc != getCurrentBlock().getLocation().y && i < getNumberOfScrolls() - 1; i++) {
+                curBlockLoc = getCurrentBlock().getLocation().y;
+                if (curBlockLoc < windowCenter) {
+                    return;
+                }
+                scroll(true);
+
+            }
+
+        }
+    }
+
 
     @И("проверить что блок отсуствует")
     public void checkBlockNotExist() {
