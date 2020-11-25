@@ -13,6 +13,7 @@ import utils.StyleResourceHelper;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import static ru.yandex.qatools.matchers.webdriver.EnabledMatcher.enabled;
 
@@ -25,6 +26,7 @@ public class ElementReadyClickSendKeysExtension extends AbstractFrameworkAndroid
     @Override
     public Object invoke(Object proxy, MethodInfo methodInfo, Configuration configuration) throws Throwable {
         UIElement atlasWebElement = (UIElement) proxy;
+        getDriver().manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);
         int numberOfTimes = getNumberOfScrolls()-1;
         try {
             atlasWebElement.getLocation();
@@ -43,6 +45,8 @@ public class ElementReadyClickSendKeysExtension extends AbstractFrameworkAndroid
             }
         }
         atlasWebElement.getLocation();
+
+        getDriver().manage().timeouts().implicitlyWait(getImplicitlyTimeout(), TimeUnit.SECONDS);
         return new TargetMethodInvoker().invoke(atlasWebElement, methodInfo, configuration);
     }
 

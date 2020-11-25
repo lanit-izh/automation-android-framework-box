@@ -26,7 +26,7 @@ public class AllureHelper {
     }
 
     public static void attachPageSource(byte[] bytes) {
-        get().addAttachment("Page source", "text/html", "html", bytes);
+        get().addAttachment("Page source", "text/xml", "xml", bytes);
     }
 
     public static void setStepStatusBroken(String description) {

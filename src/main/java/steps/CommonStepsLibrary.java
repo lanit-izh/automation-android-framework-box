@@ -8,7 +8,9 @@ import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.android.nativekey.KeyEvent;
 import io.cucumber.datatable.DataTable;
 import io.qameta.atlas.webdriver.AtlasWebElement;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import pages.android_elements.Button;
 import pages.android_elements.DropDown;
 import pages.android_elements.Input;
@@ -23,6 +25,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.not;
 import static ru.yandex.qatools.matchers.webdriver.DisplayedMatcher.displayed;
@@ -175,7 +178,6 @@ public final class CommonStepsLibrary extends BaseSteps {
     }
 
 
-
     /**
      * Check selected option in dropdown
      *
@@ -224,6 +226,7 @@ public final class CommonStepsLibrary extends BaseSteps {
     public void waitUntilelementWithNameInVisibleClass(Class<? extends AtlasWebElement> type, String name) {
         getElementByName(name, type).should(not(ExistsAppiumMatcher.exists()));
     }
+
     @И("подождать, когда элемент {element} станет доступен")
     public void waitUntilEnabled(UIElement element) {
         element.should(EnabledMatcher.enabled());
@@ -357,7 +360,64 @@ public final class CommonStepsLibrary extends BaseSteps {
 
     @И("в выпадающем списке {string} выбрать значение {string}")
     public void selectInDropdownWithName(String name, String value) {
-        ((DropDown) getElementByName(name,DropDown.class)).selectByValue(value);
+        ((DropDown) getElementByName(name, DropDown.class)).selectByValue(value);
     }
+
+    @И("нажать {int} раза на {type} {string}")
+    public void clickByNameCount(int count, Class<? extends UIElement> type, String elementName) {
+        for (int i = 0; i < count; i++) {
+            getElementByName(elementName, type).click();
+        }
+    }
+
+
+    @И("на скрине отображается текст {string}")
+    public void ElementHasText(String text) {
+        String actualText = getUIElement(Text.class, text).getText().replaceAll("\n", "").trim();
+        softAssert().assertTrue(actualText.toLowerCase().contains(text.toLowerCase()), "Текст в блоке '" + actualText + "'. Не содержит текст: '" + text + "'");
+    }
+
+    @И("^в текущем блоке сделать свайп (вправо|влево)$")
+    public void swipeInsideBlock(String side) {
+        swipeIntoElement(side.equals("вправо"), (WebElement) getSearchContext());
+    }
+
+
+    @И("нажать {int} раз кнопку устройства назад")
+    public void clickActionButton(int count) {
+
+        for (int i = 0; i < count; i++) {
+            clickActionButton();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @И("в текущем блоке используя свайп {word} найти {type} с текстом {string}")
+    public void searchInsideBlock(String side, Class<? extends UIElement> elementType, String text) {
+        getDriver().manage().timeouts().implicitlyWait(500, TimeUnit.MILLISECONDS);
+        try {
+            WebElement element = getUIElement(elementType, text);
+            element.getLocation();
+        } catch (
+                NoSuchElementException ex) {
+
+            swipeInsideBlock(side);
+        }
+        getDriver().manage().timeouts().implicitlyWait(getImplicitlyTimeout(), TimeUnit.SECONDS);
+    }
+
+    @И("ожидаем {int} секунд")
+    public void wait(int sec) {
+        try {
+            Thread.sleep(sec * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
