@@ -4,3 +4,4 @@ capabilities:
   deviceName: Nexus
   appPackage: com.google.android.youtube
   appActivity: .HomeActivity
+  automationName: UiAutomator2
